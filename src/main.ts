@@ -26,9 +26,9 @@ async function readStdin(): Promise<string | null> {
 
 const piped = await readStdin();
 
-const main = new Command().name("genit")
+const main = new Command().name("genid")
   .version("0.1.0")
-  .description("Generate and validate uuid or secret strings");
+  .description("Generate uuid and secret strings");
 
 const uuidCmd = new Command().description("Generate uuid strings");
 
