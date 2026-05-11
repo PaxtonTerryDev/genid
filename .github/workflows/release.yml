@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Compile
+        run: |
+          deno compile --allow-all --target x86_64-unknown-linux-gnu --output dist/genid-linux-x86_64 src/main.ts
+          deno compile --allow-all --target aarch64-unknown-linux-gnu --output dist/genid-linux-aarch64 src/main.ts
+          deno compile --allow-all --target x86_64-apple-darwin --output dist/genid-macos-x86_64 src/main.ts
+          deno compile --allow-all --target aarch64-apple-darwin --output dist/genid-macos-aarch64 src/main.ts
+          deno compile --allow-all --target x86_64-pc-windows-msvc --output dist/genid-windows-x86_64 src/main.ts
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
